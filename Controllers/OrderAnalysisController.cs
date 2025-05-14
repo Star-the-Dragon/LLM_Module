@@ -91,6 +91,7 @@ namespace LLM_Module.Controllers
             using var doc = JsonDocument.Parse(responseString);
             var modelOutput = doc.RootElement.GetProperty("response").GetString();
 
+
             // Парсинг JSON из ответа модели
             try
             {
