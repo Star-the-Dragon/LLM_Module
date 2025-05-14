@@ -94,20 +94,24 @@ namespace LLM_Module.Controllers
             // Парсинг JSON из ответа модели
             try
             {
-                var innerJson = JsonSerializer.Deserialize<string>(modelOutput);
-                var selectedCompanies = JsonSerializer.Deserialize<List<MatchedCompany>>(innerJson);
+                var cleanedOutput = modelOutput
+                    .Replace("```json", "", StringComparison.OrdinalIgnoreCase)
+                    .Replace("```", "")
+                    .Trim();
+
+                var selectedCompanies = JsonSerializer.Deserialize<List<MatchedCompany>>(cleanedOutput);
                 return Ok(selectedCompanies);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest("Ошибка ответа LLM: " + modelOutput);
+                return BadRequest("Ошибка десериализации: " + ex.Message + "\nModel output: " + modelOutput);
             }
         }
 
         public class MatchedCompany
         {
             public int CompanyId { get; set; }
-            public string ПричинаВыбора { get; set; }
+            public string Reason { get; set; }
         }
     }
 }
