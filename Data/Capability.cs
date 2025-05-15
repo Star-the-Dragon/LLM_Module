@@ -11,7 +11,5 @@ namespace LLM_Module.Data
         public int MaxDiameter { get; set; }
         public int MaxLength { get; set; }
         public string Notes { get; set; }
-
-        public Company Company { get; set; }
     }
 }

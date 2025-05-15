@@ -13,18 +13,18 @@ namespace LLM_Module.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class OrderController : ControllerBase
+    public class OrderAnalysisController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly AppDbContext _context;
 
-        public OrderController(IHttpClientFactory httpClientFactory, AppDbContext context)
+        public OrderAnalysisController(IHttpClientFactory httpClientFactory, AppDbContext context)
         {
             _httpClientFactory = httpClientFactory;
             _context = context;
         }
 
-        public class OrderRequest
+        public class OrderAnalysisRequest
         {
             public string Description { get; set; }
             public int Quantity { get; set; }
@@ -32,20 +32,18 @@ namespace LLM_Module.Controllers
         }
 
         [HttpPost("match")]
-        public async Task<IActionResult> MatchCompanies([FromBody] OrderRequest request)
+        public async Task<IActionResult> MatchCompanies([FromBody] OrderAnalysisRequest request)
         {
-            var companies = await _context.Companies
+            var companies = await _context.Company
                 .Include(c => c.Capabilities)
                 .ToListAsync();
 
             var companyData = companies.Select(c => new
             {
                 c.CompanyId,
-                c.Name,
-                c.Location,
+                c.CompanyName,
+                c.Address,
                 c.Description,
-                c.Email,
-                c.Phone,
                 Capabilities = c.Capabilities.Select(cap => new
                 {
                     cap.Material,

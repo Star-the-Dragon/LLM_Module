@@ -9,6 +9,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add services to the container.
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowXampp", policy =>
+    {
+        policy.WithOrigins("http://localhost") // или "http://localhost:80"
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 
@@ -26,6 +35,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseCors("AllowXampp");
 
 app.UseAuthorization();
 
